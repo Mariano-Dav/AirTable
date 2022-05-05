@@ -77,7 +77,6 @@ const LinkedRecordsField = (props: LinkedRecordsFieldProps) => {
 
         if (shouldFetchRecords) {
             await fetchRecordsForLinkedRecordsSelector(searchTerm);
-            
         }
     };
     const closeSelector = () => setIsSelectorOpen(false);
@@ -103,13 +102,14 @@ const LinkedRecordsField = (props: LinkedRecordsFieldProps) => {
         async (searchTerm: string) => {
             const unixEpoch = Date.now();
             // Early return to avoid excessive fetching
-            console.log(lastFetchUnixEpoch)
-            // if (Number(lastFetchUnixEpoch.current) > unixEpoch - 200) return;
-            // lastFetchUnixEpoch.current = unixEpoch;
+            if (Number(lastFetchUnixEpoch.current) > unixEpoch - 200) {
+                return;
+            }
+            lastFetchUnixEpoch.current = unixEpoch;
 
-            // if (!offset.current) {
-            //     setIsLoading(true);
-            // }
+            if (!offset.current) {
+                setIsLoading(true);
+            }
             try {
                 const result = await executeApiRequest<
                     FetchRecordsForLinkedRecordsSelectorInput,
